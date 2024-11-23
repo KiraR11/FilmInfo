@@ -1,6 +1,6 @@
 package com.example.filminfo.Data
 
-import com.example.filminfo.Model.MovieResponse
+import com.example.filminfo.Model.FilmResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -8,7 +8,7 @@ import retrofit2.http.GET
 
 interface ApiService {
     @GET("films.json")
-    suspend fun getMovies() : Response<MovieResponse>
+    suspend fun getMovies() : Response<FilmResponse>
 
     companion object {
 

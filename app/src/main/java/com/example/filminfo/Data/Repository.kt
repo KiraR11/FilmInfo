@@ -1,10 +1,10 @@
 package com.example.filminfo.Data
 
-import com.example.filminfo.Model.Movie
+import com.example.filminfo.Model.Film
 
 class Repository(private val apiService: ApiService) {
 
-    suspend fun fetchMovie(): Result<List<Movie>> {
+    suspend fun fetchMovie(): Result<List<Film>> {
         return try {
             val response = apiService.getMovies()
             if (response.isSuccessful) {

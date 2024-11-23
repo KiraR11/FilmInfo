@@ -1,63 +1,100 @@
 package com.example.filminfo.View
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
-import com.example.filminfo.Data.ApiService
-import com.example.filminfo.Data.Repository
+import com.google.android.material.appbar.MaterialToolbar
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import com.example.filminfo.Model.Film
 import com.example.filminfo.R
+import com.example.filminfo.View.Contracts.HasBackButton
 import com.example.filminfo.ViewModel.MainViewModel
-import com.google.android.material.snackbar.Snackbar
+import ua.cn.stu.navigation.contract.HasCustomTitle
+import ua.cn.stu.navigation.contract.Navigator
 
-class MainActivity : AppCompatActivity() {
+@Suppress("DEPRECATION")
+class MainActivity : AppCompatActivity(), Navigator {
+
 
     private lateinit var viewModel: MainViewModel
 
-    @SuppressLint("ResourceType")
+    private val currentFragment: Fragment
+        get() = supportFragmentManager.findFragmentById(R.id.fragmentContainerView)!!
+
+    private val fragmentListener = object : FragmentManager.FragmentLifecycleCallbacks() {
+        override fun onFragmentViewCreated(fm: FragmentManager, f: Fragment, v: View, savedInstanceState: Bundle?) {
+            super.onFragmentViewCreated(fm, f, v, savedInstanceState)
+            updateUi()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setSupportActionBar(findViewById(R.id.toolbar))
 
+        val fragment : LoadingDataFragment = LoadingDataFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragmentContainerView, fragment)
+            .commit()
 
-        val editTextFilmJson = findViewById<TextView>(R.id.TextFilmJson)
-        val LinearLayoutnotification = findViewById<View>(R.id.LinearLayoutnotification)
-        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-        val snackbar = Snackbar.make(
-            LinearLayoutnotification,
-            "Ошибка подключения сети",
-            Snackbar.LENGTH_INDEFINITE
-        ).setActionTextColor(ContextCompat.getColor(this, R.color.base_yellow))
+        supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
 
-        val apiService = ApiService.create()
-        var repository = Repository(apiService)
-        viewModel = MainViewModel(repository) // TODO поменять на ViewModelProvider(this)[MainViewModel::class.java]
+        // TODO: Use the ViewModel
+    }
 
-        snackbar.setAction("Повторить") {
-            viewModel.loadMovies()
+    override fun onDestroy() {
+        super.onDestroy()
+        supportFragmentManager.unregisterFragmentLifecycleCallbacks(fragmentListener)
+    }
+
+    private fun updateUi() {
+        val fragment = currentFragment
+
+        val tolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        if(tolbar != null) {
+            tolbar.title =
+                if (fragment is HasCustomTitle)
+                    fragment.getTitle()
+                else
+                    getString(R.string.app_name)
+
+            supportActionBar?.setDisplayHomeAsUpEnabled(
+                supportFragmentManager.backStackEntryCount > 0 &&
+                fragment is HasBackButton)
         }
+    }
 
-        viewModel.loading.observe(this) { isLoading ->
-            progressBar.isVisible = isLoading
-            if (isLoading) {
-                editTextFilmJson.isVisible = false
+    override fun showFilmInfoScreen(film: Film) {
+        launchFragment(FilmInfoFragment.newInstance(film))
+    }
+
+    override fun showFilmsListScreen(films: List<Film>) {
+        launchFragment(FilmsListFragment.newInstance(films))
+    }
+
+    override fun showLoadingDataScreen() {
+        launchFragment(LoadingDataFragment())
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .addToBackStack(null)
+            .replace(R.id.fragmentContainerView, fragment)
+            .commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-
-        viewModel.movies.observe(this) { result ->//viewLifecycleOwner
-            result.onSuccess { movies ->
-                editTextFilmJson.isVisible = true;
-                editTextFilmJson.text = movies.toString()
-            }.onFailure { exception ->
-                snackbar.show()
-            }
-        }
-
-        viewModel.loadMovies()
     }
 }
