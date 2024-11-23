@@ -1,24 +1,25 @@
-package com.example.filminfo.Model
+package com.example.filminfo.Data
 
-import retrofit2.Call
+import com.example.filminfo.Model.MovieResponse
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
-interface ApiInterface {
+interface ApiService {
     @GET("films.json")
-    fun getMovies() : Call<MovieResponse>
+    suspend fun getMovies() : Response<MovieResponse>
 
     companion object {
 
         var BASE_URL = "https://s3-eu-west-1.amazonaws.com/sequeniatesttask/"
-        fun create() : ApiInterface {
+        fun create() : ApiService {
 
             val retrofit = Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(BASE_URL)
                 .build()
-            return retrofit.create(ApiInterface::class.java)
+            return retrofit.create(ApiService::class.java)
 
         }
     }

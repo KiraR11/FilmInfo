@@ -1,52 +1,63 @@
 package com.example.filminfo.View
 
-import android.app.AlertDialog
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import com.example.filminfo.Model.ApiInterface
-import com.example.filminfo.Model.Movie
-import com.example.filminfo.Model.MovieResponse
+import com.example.filminfo.Data.ApiService
+import com.example.filminfo.Data.Repository
 import com.example.filminfo.R
 import com.example.filminfo.ViewModel.MainViewModel
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
 
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
         val editTextFilmJson = findViewById<TextView>(R.id.TextFilmJson)
+        val LinearLayoutnotification = findViewById<View>(R.id.LinearLayoutnotification)
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        val snackbar = Snackbar.make(
+            LinearLayoutnotification,
+            "Ошибка подключения сети",
+            Snackbar.LENGTH_INDEFINITE
+        ).setActionTextColor(ContextCompat.getColor(this, R.color.base_yellow))
 
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        val apiService = ApiService.create()
+        var repository = Repository(apiService)
+        viewModel = MainViewModel(repository) // TODO поменять на ViewModelProvider(this)[MainViewModel::class.java]
 
-        val apiInterface = ApiInterface.create().getMovies()
+        snackbar.setAction("Повторить") {
+            viewModel.loadMovies()
+        }
 
-        apiInterface.enqueue( object : Callback<MovieResponse> {
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                if (response.isSuccessful) {
-                    Log.d("testRetrofit", "Successful")
-                    val movies = response.body()
-                    editTextFilmJson.text = movies?.films?.toString()
-                } else {
-                    Log.d("testRetrofit", "Error: ${response.code()} - ${response.message()}")
-                    editTextFilmJson.text = "Ошибка"
-                }
+        viewModel.loading.observe(this) { isLoading ->
+            progressBar.isVisible = isLoading
+            if (isLoading) {
+                editTextFilmJson.isVisible = false
             }
+        }
 
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                Log.d("testRetrofit", "Failurefull")
-                Log.d("testRetrofit", "Error: ${t.message}")
-                editTextFilmJson.text = "Ошибка"
+        viewModel.movies.observe(this) { result ->//viewLifecycleOwner
+            result.onSuccess { movies ->
+                editTextFilmJson.isVisible = true;
+                editTextFilmJson.text = movies.toString()
+            }.onFailure { exception ->
+                snackbar.show()
             }
-        })
+        }
+
+        viewModel.loadMovies()
     }
 }
