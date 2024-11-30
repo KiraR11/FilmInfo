@@ -1,4 +1,4 @@
-package com.example.filminfo.View
+package com.example.filminfo.view
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -7,10 +7,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.example.filminfo.Model.Film
+import com.example.filminfo.model.Film
 import com.example.filminfo.R
-import com.example.filminfo.View.Contracts.HasBackButton
-import com.example.filminfo.ViewModel.MainViewModel
+import com.example.filminfo.view.contracts.HasBackButton
+import com.example.filminfo.viewModel.MainViewModel
 import ua.cn.stu.navigation.contract.HasCustomTitle
 import ua.cn.stu.navigation.contract.Navigator
 

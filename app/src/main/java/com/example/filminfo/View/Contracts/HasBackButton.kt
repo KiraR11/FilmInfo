@@ -1,4 +1,4 @@
-package com.example.filminfo.View.Contracts
+package com.example.filminfo.view.contracts
 
 interface HasBackButton {
 }

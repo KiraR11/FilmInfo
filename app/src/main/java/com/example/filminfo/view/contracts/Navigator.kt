@@ -1,7 +1,7 @@
 package ua.cn.stu.navigation.contract
 
 import androidx.fragment.app.Fragment
-import com.example.filminfo.Model.Film
+import com.example.filminfo.model.Film
 
 fun Fragment.navigator(): Navigator {
     return requireActivity() as Navigator

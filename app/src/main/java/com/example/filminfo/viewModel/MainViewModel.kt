@@ -1,4 +1,4 @@
-package com.example.filminfo.ViewModel
+package com.example.filminfo.viewModel
 
 import androidx.lifecycle.ViewModel
 

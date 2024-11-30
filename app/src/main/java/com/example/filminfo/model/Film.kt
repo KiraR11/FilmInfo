@@ -1,17 +1,18 @@
-package com.example.filminfo.Model
+package com.example.filminfo.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 
 data class Film(
     var id: Int,
-    val localizedName: String,
-    val name: String,
+    @SerializedName("localized_name") val localizedName: String?,
+    val name: String?,
     val year: Int,
     val rating: Double,
-    val imageUrl: String,
-    val description: String,
-    val genres: List<String>,
+    @SerializedName("image_url") val imageUrl: String?,
+    val description: String?,
+    val genres: List<String>?,
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readInt(),

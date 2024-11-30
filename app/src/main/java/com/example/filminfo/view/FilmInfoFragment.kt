@@ -1,15 +1,16 @@
-package com.example.filminfo.View
+package com.example.filminfo.view
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.filminfo.Model.Film
+import androidx.databinding.DataBindingUtil
+import com.example.filminfo.model.Film
 import com.example.filminfo.R
-import com.example.filminfo.View.Contracts.HasBackButton
-import com.example.filminfo.ViewModel.FilmInfoViewModel
+import com.example.filminfo.view.contracts.HasBackButton
+import com.example.filminfo.viewModel.FilmInfoViewModel
+import com.example.filminfo.databinding.FragmentFilmInfoBinding
 import ua.cn.stu.navigation.contract.HasCustomTitle
 
 
@@ -32,13 +33,16 @@ class FilmInfoFragment : Fragment(), HasCustomTitle, HasBackButton {
         }
     }
 
-    private lateinit var nameFilm : String
-    private val viewModel: FilmInfoViewModel by viewModels()
+    private var film : Film? = null
+    private lateinit var binding: FragmentFilmInfoBinding
+    private lateinit var viewModel: FilmInfoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
+        film = arguments?.getParcelable(FILMVALUE)
+        if (film != null) {
+            viewModel = FilmInfoViewModel(film!!)
+        }
     }
 
     override fun onCreateView(
@@ -48,13 +52,22 @@ class FilmInfoFragment : Fragment(), HasCustomTitle, HasBackButton {
         val view = inflater.inflate(R.layout.fragment_film_info, container, false)
 
         arguments?.let {
-            val film: Film? = it.getParcelable(FILMVALUE)
-            nameFilm = film!!.name
+            film = it.getParcelable(FILMVALUE)!!
         }
-        return view
+
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_film_info, container, false)
+
+        // Установка ViewModel в привязку
+        binding.viewModel = viewModel
+
+        // Установка жизненного цикла
+        binding.lifecycleOwner = this
+
+
+        return binding.root
     }
 
     override fun getTitle(): String {
-        return  nameFilm
+        return  film?.name ?: "..."
     }
 }

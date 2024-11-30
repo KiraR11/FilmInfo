@@ -1,6 +1,6 @@
-package com.example.filminfo.Data
+package com.example.filminfo.data
 
-import com.example.filminfo.Model.FilmResponse
+import com.example.filminfo.model.FilmResponse
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

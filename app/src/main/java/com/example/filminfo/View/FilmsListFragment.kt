@@ -1,15 +1,19 @@
-package com.example.filminfo.View
+package com.example.filminfo.view
 
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import com.example.filminfo.Model.Film
-import com.example.filminfo.ViewModel.FilmsListViewModel
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.filminfo.model.Film
 import com.example.filminfo.R
+import com.example.filminfo.view.adapters.FilmAdapter
+import com.example.filminfo.view.adapters.GenreAdapter
+import com.example.filminfo.viewModel.FilmsListViewModel
+import ua.cn.stu.navigation.contract.navigator
 
 class FilmsListFragment : Fragment() {
 
@@ -29,11 +33,10 @@ class FilmsListFragment : Fragment() {
         }
     }
 
-    private val viewModel: FilmsListViewModel by viewModels()
+    private lateinit var viewModel: FilmsListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
 
     }
 
@@ -42,12 +45,28 @@ class FilmsListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_films_list, container, false)
-        val testText = view.findViewById<TextView>(R.id.testText)
+
         arguments?.let {
             val films: List<Film>? = it.getParcelableArrayList(FILMSVALUE)
-            testText.text = films!!.joinToString("\n")
-
+            viewModel = FilmsListViewModel(films)
         }
+
+        val filmsAdapter = FilmAdapter { film -> navigator().showFilmInfoScreen(film) }
+        view.findViewById<RecyclerView>(R.id.ListFilms).apply {
+            adapter = filmsAdapter
+            layoutManager = GridLayoutManager(context, 2)
+        }
+
+        val genresAdapter = GenreAdapter({ genre : String? -> viewModel.setFilmByGenre(genre)}, viewModel.genres)
+        view.findViewById<RecyclerView>(R.id.ListGenres).apply {
+            adapter = genresAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
+        viewModel.films.observe(viewLifecycleOwner,{ films ->
+            filmsAdapter.submitList(films)
+        })
+
         return view
     }
 }

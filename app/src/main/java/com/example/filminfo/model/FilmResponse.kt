@@ -1,4 +1,4 @@
-package com.example.filminfo.Model
+package com.example.filminfo.model
 
 data class FilmResponse(
     val films: List<Film>

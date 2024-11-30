@@ -1,14 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".View.FilmsListFragment">
-
-    <TextView
-        android:id="@+id/testText"
+    tools:context=".view.FilmsListFragment">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/HeadGenres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/genres"
+            style="@style/Theme.HeadBase"
+            />
 
-</FrameLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ListGenres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            />
+
+        <TextView
+            android:id="@+id/HeadFilms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/films"
+            style="@style/Theme.HeadBase"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ListFilms"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:listitem="@layout/item_film"
+            android:paddingLeft="16sp"
+            android:paddingRight="16sp"
+            />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

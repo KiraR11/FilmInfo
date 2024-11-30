@@ -1,6 +1,6 @@
-package com.example.filminfo.Data
+package com.example.filminfo.data
 
-import com.example.filminfo.Model.Film
+import com.example.filminfo.model.Film
 
 class Repository(private val apiService: ApiService) {
 
