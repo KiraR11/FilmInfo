@@ -14,7 +14,6 @@ import com.example.filminfo.view.adapters.FilmAdapter
 import com.example.filminfo.view.adapters.GenreAdapter
 import com.example.filminfo.viewModel.FilmsListViewModel
 import org.koin.androidx.viewmodel.ext.android.getViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import ua.cn.stu.navigation.contract.navigator
 

@@ -1,7 +1,6 @@
 package com.example.filminfo.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +8,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
-import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
-import androidx.databinding.DataBindingUtil
 import com.example.filminfo.viewModel.LoadingDataViewModel
 import com.example.filminfo.R
-import com.example.filminfo.databinding.FragmentFilmInfoBinding
-import com.example.filminfo.databinding.FragmentLoadingDataBinding
 import com.google.android.material.snackbar.Snackbar
 import ua.cn.stu.navigation.contract.navigator
 import org.koin.androidx.viewmodel.ext.android.viewModel
