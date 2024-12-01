@@ -9,16 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.filminfo.model.Film
 import com.example.filminfo.R
+import com.example.filminfo.di.appModule
 import com.example.filminfo.view.contracts.HasBackButton
-import com.example.filminfo.viewModel.MainViewModel
+import org.koin.core.context.GlobalContext.startKoin
 import ua.cn.stu.navigation.contract.HasCustomTitle
 import ua.cn.stu.navigation.contract.Navigator
 
-@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), Navigator {
-
-
-    private lateinit var viewModel: MainViewModel
 
     private val currentFragment: Fragment
         get() = supportFragmentManager.findFragmentById(R.id.fragmentContainerView)!!
@@ -43,7 +40,9 @@ class MainActivity : AppCompatActivity(), Navigator {
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
 
-        // TODO: Use the ViewModel
+        startKoin {
+            modules(appModule)
+        }
     }
 
     override fun onDestroy() {

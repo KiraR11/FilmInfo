@@ -13,6 +13,9 @@ import com.example.filminfo.R
 import com.example.filminfo.view.adapters.FilmAdapter
 import com.example.filminfo.view.adapters.GenreAdapter
 import com.example.filminfo.viewModel.FilmsListViewModel
+import org.koin.androidx.viewmodel.ext.android.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import ua.cn.stu.navigation.contract.navigator
 
 class FilmsListFragment : Fragment() {
@@ -32,12 +35,17 @@ class FilmsListFragment : Fragment() {
             return fragment
         }
     }
-
-    private lateinit var viewModel: FilmsListViewModel
+    private lateinit  var films: List<Film>
+    private lateinit  var viewModel: FilmsListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Инициализация films в onCreate
+        films = arguments?.getParcelableArrayList(FILMSVALUE) ?: emptyList()
+
+        // Инициализация ViewModel после получения films
+        viewModel = getViewModel { parametersOf(films) }
     }
 
     override fun onCreateView(
@@ -45,11 +53,6 @@ class FilmsListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_films_list, container, false)
-
-        arguments?.let {
-            val films: List<Film>? = it.getParcelableArrayList(FILMSVALUE)
-            viewModel = FilmsListViewModel(films)
-        }
 
         val filmsAdapter = FilmAdapter { film -> navigator().showFilmInfoScreen(film) }
         view.findViewById<RecyclerView>(R.id.ListFilms).apply {

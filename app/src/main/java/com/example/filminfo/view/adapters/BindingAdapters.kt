@@ -16,10 +16,4 @@ object BindingAdapters {
             Picasso.get().load(Uri.parse(imageUrl)).into(view)
         }
     }
-
-    //app:defaultImage="@drawable/not_image_film"
-
-
-
-
 }

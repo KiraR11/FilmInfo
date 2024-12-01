@@ -4,7 +4,7 @@ import com.example.filminfo.model.Film
 
 class Repository(private val apiService: ApiService) {
 
-    suspend fun fetchMovie(): Result<List<Film>> {
+    suspend fun fetchFilms(): Result<List<Film>> {
         return try {
             val response = apiService.getMovies()
             if (response.isSuccessful) {
