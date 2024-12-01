@@ -4,15 +4,12 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.filminfo.model.Film
 import com.example.filminfo.R
-import com.example.filminfo.di.appModule
 import com.example.filminfo.view.contracts.HasBackButton
-import org.koin.core.context.GlobalContext.startKoin
 import ua.cn.stu.navigation.contract.HasCustomTitle
 import ua.cn.stu.navigation.contract.Navigator
 
@@ -33,12 +30,13 @@ class MainActivity : AppCompatActivity(), Navigator {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val fragment : LoadingDataFragment = LoadingDataFragment.newInstance()
-        supportFragmentManager
-            .beginTransaction()
-            .add(R.id.fragmentContainerView, fragment)
-            .commit()
-
+        if (savedInstanceState == null) {
+            val fragment: LoadingDataFragment = LoadingDataFragment.newInstance()
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragmentContainerView, fragment)
+                .commit()
+        }
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
     }
 
