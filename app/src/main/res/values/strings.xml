@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Фильмы</string>
+    <string name="films">Фильмы</string>
+    <string name="genres">Жанры</string>
+    <string name="network_connection_error">Ошибка подключения сети</string>
+    <string name="repeat">Повторить</string>
+    <string name="movie_search_service">КиноПоиск</string>
+</resources>

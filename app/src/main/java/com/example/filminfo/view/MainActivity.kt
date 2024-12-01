@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.appbar.MaterialToolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -39,10 +40,6 @@ class MainActivity : AppCompatActivity(), Navigator {
             .commit()
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, false)
-
-        startKoin {
-            modules(appModule)
-        }
     }
 
     override fun onDestroy() {

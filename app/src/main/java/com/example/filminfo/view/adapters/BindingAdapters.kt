@@ -13,7 +13,7 @@ object BindingAdapters {
         if (imageUrl.isNullOrEmpty()) {
             view.setImageDrawable(defaultImage)
         } else {
-            Picasso.get().load(Uri.parse(imageUrl)).into(view)
+            Picasso.get().load(Uri.parse(imageUrl)).error(defaultImage).into(view)
         }
     }
 }
